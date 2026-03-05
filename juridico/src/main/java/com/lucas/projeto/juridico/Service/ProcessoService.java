@@ -38,6 +38,7 @@ public class ProcessoService {
             processoExistente.setStatus(processoAtualizado.getStatus());
             processoExistente.setDescricao(processoAtualizado.getDescricao());
             processoExistente.setDataPrazo(processoAtualizado.getDataPrazo());
+            processoExistente.setEtiquetas(processoAtualizado.getEtiquetas());
             return repository.save(processoExistente);
         } else {
             throw new RuntimeException("Processo não encontrado com o ID: " + id);
