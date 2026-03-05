@@ -1,6 +1,6 @@
-package com.lucas.projeto.juridico.repository;
+package com.lucas.projeto.juridico.Repository;
 
-import com.lucas.projeto.juridico.model.Processo;
+import com.lucas.projeto.juridico.Model.Processo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

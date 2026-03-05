@@ -1,4 +1,4 @@
-package com.lucas.projeto.juridico.model;
+package com.lucas.projeto.juridico.Model;
 
 import jakarta.persistence.*;
 import lombok.Data;
