@@ -58,4 +58,17 @@ public class ProcessoController {
         service.deletarProcesso(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PatchMapping("/{id}/arquivar")
+    @Operation(summary = "Arquivar um processo", description = "Marca o processo como arquivado para que saia do Kanban principal, mas permaneça no histórico.")
+    @ApiResponse(responseCode = "200", description = "Processo arquivado com sucesso")
+    @ApiResponse(responseCode = "404", description = "Processo não encontrado")
+    public ResponseEntity<Processo> arquivar(@PathVariable Long id) {
+        try {
+            Processo processoArquivado = service.arquivarProcesso(id);
+            return ResponseEntity.ok(processoArquivado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

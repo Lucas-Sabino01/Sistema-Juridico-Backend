@@ -39,6 +39,10 @@ public class ProcessoService {
             processoExistente.setDescricao(processoAtualizado.getDescricao());
             processoExistente.setDataPrazo(processoAtualizado.getDataPrazo());
             processoExistente.setEtiquetas(processoAtualizado.getEtiquetas());
+            processoExistente.setHonorarios(processoAtualizado.getHonorarios());
+            processoExistente.setCpfCliente(processoAtualizado.getCpfCliente());
+            processoExistente.setSenhaGov(processoAtualizado.getSenhaGov());
+            processoExistente.setArquivado(processoAtualizado.isArquivado());
             return repository.save(processoExistente);
         } else {
             throw new RuntimeException("Processo não encontrado com o ID: " + id);
@@ -47,5 +51,14 @@ public class ProcessoService {
 
     public void deletarProcesso(Long id) {
         repository.deleteById(id);
+    }
+
+    public Processo arquivarProcesso(Long id) {
+        return repository.findById(id).map(processo -> {
+            processo.setArquivado(true);
+            // Regra de negócio: Quando arquivamos, ele automaticamente é considerado "Concluído"
+            processo.setStatus("Concluído");
+            return repository.save(processo);
+        }).orElseThrow(() -> new RuntimeException("Processo não encontrado com o ID: " + id));
     }
 }
