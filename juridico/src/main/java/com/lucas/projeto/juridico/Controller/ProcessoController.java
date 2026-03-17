@@ -2,10 +2,13 @@ package com.lucas.projeto.juridico.Controller;
 
 import com.lucas.projeto.juridico.Model.Processo;
 import com.lucas.projeto.juridico.Service.ProcessoService;
+import com.lucas.projeto.juridico.Service.RelatorioExcelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,14 +16,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/processos")
-@CrossOrigin(origins = "*")
 @Tag(name = "Processos", description = "API para gerenciamento dos cartões de processos jurídicos")
 public class ProcessoController {
 
     private final ProcessoService service;
+    private final RelatorioExcelService excelService;
 
-    public ProcessoController(ProcessoService service) {
+    public ProcessoController(ProcessoService service, RelatorioExcelService excelService) {
         this.service = service;
+        this.excelService = excelService;
     }
 
     @GetMapping
@@ -28,6 +32,20 @@ public class ProcessoController {
     @ApiResponse(responseCode = "200", description = "Lista retornada com sucesso")
     public ResponseEntity<List<Processo>> listar() {
         return ResponseEntity.ok(service.listarTodos());
+    }
+
+    @GetMapping("/exportar")
+    @Operation(summary = "Exportar processos para Excel", description = "Gera e baixa um arquivo .xlsx com todos os dados da base.")
+    public ResponseEntity<byte[]> exportarParaExcel() {
+        byte[] excelContent = excelService.gerarPlanilhaProcessos();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+        headers.setContentDispositionFormData("attachment", "relatorio_processos.xlsx");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(excelContent);
     }
 
     @PostMapping
