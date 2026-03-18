@@ -24,7 +24,7 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
 
-    @Value("${app.jwt.secret:chaveSecretaMuitoLongaParaOProjetoJuridicoQueTemPeloMenos32Bytes!}")
+    @Value("${JWT_SECRET}")
     private String jwtSecret;
 
     public AuthController(AuthenticationManager authenticationManager) {
@@ -34,12 +34,8 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credenciais) {
         try {
-            // Agora espera "email" e "senha" do frontend
             String email = credenciais.get("email");
             String senha = credenciais.get("senha");
-
-            // O AuthenticationManager recebe um token com (principal, credentials)
-            // No seu caso, o principal é o email
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(email, senha)
             );

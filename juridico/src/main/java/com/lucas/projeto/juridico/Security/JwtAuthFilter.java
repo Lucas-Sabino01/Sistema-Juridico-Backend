@@ -26,7 +26,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
 
-    @Value("${app.jwt.secret:chaveSecretaMuitoLongaParaOProjetoJuridicoQueTemPeloMenos32Bytes!}")
+    @Value("${JWT_SECRET}")
     private String jwtSecret;
 
     public JwtAuthFilter(UserDetailsService userDetailsService) {
