@@ -25,8 +25,8 @@ public class CryptoConverter implements AttributeConverter<String, String> {
 
     @Override
     public String convertToDatabaseColumn(String dadoOriginal) {
-        if (dadoOriginal == null) {
-            return null;
+        if (dadoOriginal == null || dadoOriginal.trim().isEmpty()) {
+            return dadoOriginal;
         }
         try {
             Key key = new SecretKeySpec(KEY, ALGORITHM);
@@ -35,14 +35,15 @@ public class CryptoConverter implements AttributeConverter<String, String> {
             byte[] criptografado = cipher.doFinal(dadoOriginal.getBytes());
             return Base64.getEncoder().encodeToString(criptografado);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao criptografar dado sensível", e);
+            System.err.println("ERRO AES: O tamanho da sua APP_SECURITY_ENCRYPTION_KEY é válido? Deve ter 16, 24 ou 32 caracteres.");
+            throw new RuntimeException("Erro ao criptografar dado", e);
         }
     }
 
     @Override
     public String convertToEntityAttribute(String dadoCriptografado) {
-        if (dadoCriptografado == null) {
-            return null;
+        if (dadoCriptografado == null || dadoCriptografado.trim().isEmpty()) {
+            return dadoCriptografado;
         }
         try {
             Key key = new SecretKeySpec(KEY, ALGORITHM);
