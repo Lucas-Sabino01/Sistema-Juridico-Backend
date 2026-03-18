@@ -27,7 +27,7 @@ public class Processo {
 
     private LocalDate dataPrazo;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "processo_etiquetas", joinColumns = @JoinColumn(name = "processo_id"))
     @Column(name = "etiqueta")
     private List<String> etiquetas = new ArrayList<>();
