@@ -33,7 +33,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                // Removemos o .cors() tradicional daqui. O Filtro de Alta Prioridade (abaixo) assume o controle!
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll() // Rotas de login livres
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
@@ -45,7 +44,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // A BOMBA NUCLEAR CONTRA O CORS: Este filtro roda ANTES de toda a segurança do Spring!
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -53,15 +51,14 @@ public class SecurityConfig {
 
         config.setAllowCredentials(true); // Fundamental para o Navegador aceitar o Cookie!
 
-        // Usa Patterns para aceitar tanto localhost quanto 127.0.0.1 de forma dinâmica
-        config.setAllowedOriginPatterns(List.of("http://localhost:[*]", "http://127.0.0.1:[*]", "https://teu-site.vercel.app"));
+        config.setAllowedOriginPatterns(List.of("http://localhost:5000","https://sistema-juridico1.vercel.app"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 
         source.registerCorsConfiguration("/**", config);
 
         FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
-        bean.setOrder(Ordered.HIGHEST_PRECEDENCE); // Define como prioridade MÁXIMA absoluta
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
     }
 
